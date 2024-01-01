@@ -42,7 +42,10 @@ async function run() {
       res.send(reviweResult);
     })
 
-
+    // cart collection
+    app.get('/carts', async (req, res) => {
+      const item = req.body;
+    })
 
 
     // Send a ping to confirm a successful connection
