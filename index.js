@@ -30,6 +30,7 @@ async function run() {
     await client.connect();
     const menuCollection = client.db("bistro_Db").collection("menu");
     const reviweCollection = client.db("bistro_Db").collection("reviwe");
+    const cartCollection = client.db("bistro_Db").collection("carts");
 
     app.get('/menu',async(req,res)=>{
       const result = await menuCollection.find().toArray();
