@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express(express);
 const cors = require("cors");
+const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 const port = process.env.PORT || 5000;
@@ -30,7 +31,16 @@ async function run() {
     const menuCollection = client.db("bistro_Db").collection("menu");
     const reviweCollection = client.db("bistro_Db").collection("reviwe");
     const cartCollection = client.db("bistro_Db").collection("carts");
-    
+
+
+    app.post('/jwt', (req, res) => {
+      const user = req.body;
+      const token = jwt.sign(user, process.env.Access_Token_Secret, {
+        expiresIn: "1h",
+      });
+      res.send({token})
+    })
+
     // User related collection
 
     app.get("/users", async (req, res) => {
@@ -40,28 +50,36 @@ async function run() {
 
     app.post("/users", async (req, res) => {
       const user = req.body;
-   
+
       const query = { email: user.email };
       const existingUser = await usersCollection.findOne(query);
-     
+
       if (existingUser) {
-        return res.send({message:'user already exist'})
+        return res.send({ message: "user already exist" });
       }
       const result = await usersCollection.insertOne(user);
-      
+
       res.send(result);
     });
 
-    app.patch("users/admin/:id", async (req, res) => {
+    app.patch("/users/admin/:id", async (req, res) => {
       const id = req.params.id;
-      const filter = { _id: new ObjectId(id) }
+      const filter = { _id: new ObjectId(id) };
       const updateDoc = {
         $set: {
-          role: 'admin',
+          role: "admin",
         },
       };
 
       const result = await usersCollection.updateOne(filter, updateDoc);
+      res.send(result);
+    });
+
+    // delete User
+    app.delete("/carts/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await cartCollection.deleteOne(query);
       res.send(result);
     });
 
@@ -95,10 +113,10 @@ async function run() {
     });
 
     // delete data
-    app.delete("/carts/:id", async (req, res) => {
+    app.delete("/users/admin/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
-      const result = await cartCollection.deleteOne(query);
+      const result = await usersCollection.deleteOne(query);
       res.send(result);
     });
 
