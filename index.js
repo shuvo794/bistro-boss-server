@@ -122,6 +122,12 @@ async function run() {
       if (!email) {
         res.send([]);
       }
+      const decodedEmail = req.decoded.email;
+      if (email !== decodedEmail) {
+        return res
+          .status(401)
+          .send({ error: true, message: "unauthorized accsses" });
+      }
       const query = { email: email };
       const result = await cartCollection.find(query).toArray();
       res.send(result);
