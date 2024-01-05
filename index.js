@@ -6,20 +6,17 @@ require("dotenv").config();
 
 const port = process.env.PORT || 5000;
 
-
-const veriFyJwt = (res,req,next) => {
+const veriFyJwt = (res, req, next) => {
   const authorization = req.headers.authorization;
   if (!authorization) {
-    return res.status(401).send({error:true,message:'unauthorized accsses'})
+    return res
+      .status(401)
+      .send({ error: true, message: "unauthorized accsses" });
   }
 
   // bare Tokem
-  const token = authorization.split('')[1];
-
-  
-}
-
-
+  const token = authorization.split("")[1];
+};
 
 // middile ware
 
@@ -47,14 +44,13 @@ async function run() {
     const reviweCollection = client.db("bistro_Db").collection("reviwe");
     const cartCollection = client.db("bistro_Db").collection("carts");
 
-
-    app.post('/jwt', (req, res) => {
+    app.post("/jwt", (req, res) => {
       const user = req.body;
       const token = jwt.sign(user, process.env.Access_Token_Secret, {
         expiresIn: "1h",
       });
-      res.send({token})
-    })
+      res.send({ token });
+    });
 
     // User related collection
 
