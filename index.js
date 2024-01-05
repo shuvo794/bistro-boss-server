@@ -14,7 +14,7 @@ const veriFyJwt = (res,req,next) => {
   }
 
   // bare Tokem
-  
+  const token = authorization.split('')[1];
 }
 
 
