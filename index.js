@@ -117,7 +117,7 @@ async function run() {
     });
 
     // cart collection api
-    app.get("/carts", async (req, res) => {
+    app.get("/carts",veriFyJwt,async (req, res) => {
       const email = req.query.email;
       if (!email) {
         res.send([]);
