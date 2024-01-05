@@ -6,6 +6,13 @@ require("dotenv").config();
 
 const port = process.env.PORT || 5000;
 
+
+const veriFyJwt = (res,req,next) => {
+  
+}
+
+
+
 // middile ware
 
 app.use(cors());
