@@ -8,7 +8,10 @@ const port = process.env.PORT || 5000;
 
 
 const veriFyJwt = (res,req,next) => {
-  
+  const authorization = req.headers.authorization;
+  if (!authorization) {
+    return res.status(401).send({error:true,message:'unauthorized accsses'})
+  }
 }
 
 
