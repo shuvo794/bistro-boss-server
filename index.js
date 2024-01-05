@@ -18,7 +18,13 @@ const veriFyJwt = (res, req, next) => {
   const token = authorization.split("")[1];
 
   jwt.verify(token, process.env.Access_Token_Secret, (err, decoded) => {
-    
+    if (err) {
+      return res
+        .status(401)
+        .send({ error: true, message: "unauthorized accsses" });
+    }
+    req.decoded = decoded;
+    next();
   })
 };
 
