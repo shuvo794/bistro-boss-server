@@ -12,6 +12,8 @@ const veriFyJwt = (res,req,next) => {
   if (!authorization) {
     return res.status(401).send({error:true,message:'unauthorized accsses'})
   }
+
+  // bare Tokem
   
 }
 
