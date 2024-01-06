@@ -144,8 +144,7 @@ async function run() {
     // cart collection api
 
 // Todo Error Get this line
-
-    app.get("/carts", verifyToken, async (req, res) => {
+app.get("/carts", verifyToken, async (req, res) => {
       const email = req.query.email;
       if (!email) {
         res.send([]);
