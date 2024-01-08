@@ -149,6 +149,7 @@ async function run() {
       if (!email) {
         res.send([]);
       }
+      
       const decodedEmail = req.decoded.email;
       if (email !== decodedEmail) {
         return res
@@ -159,6 +160,8 @@ async function run() {
       const result = await cartCollection.find(query).toArray();
       res.send(result);
     });
+
+
     app.post("/carts", async (req, res) => {
       const item = req.body;
       // console.log(item);
