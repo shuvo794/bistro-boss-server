@@ -79,7 +79,8 @@ async function run() {
 
     const VerifyAdmin = async (res, req, next) => {
       const email = req.decoded.email;
-      const query ={email:email}
+      const query = { email: email }
+      const user = await usersCollection.findOne(query);
     };
 
     // User related collection
