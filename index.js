@@ -75,9 +75,15 @@ async function run() {
       res.send({ token });
     });
 
+    // midille Wire VerifyAdmin
+
+    const VerifyAdmin = async (res, req, next) => {
+      
+    };
+
     // User related collection
 
-    app.get("/users", async (req, res) => {
+    app.get("/users", verifyToken, async (req, res) => {
       const result = await usersCollection.find().toArray();
       res.send(result);
     });
