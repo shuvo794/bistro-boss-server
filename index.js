@@ -91,7 +91,7 @@ async function run() {
 
     // User related collection
 
-    app.get("/users", verifyToken, async (req, res) => {
+    app.get("/users", verifyToken,VerifyAdmin, async (req, res) => {
       const result = await usersCollection.find().toArray();
       res.send(result);
     });
