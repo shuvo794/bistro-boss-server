@@ -86,6 +86,7 @@ async function run() {
           .status(403)
           .send({ error: true, message: "forbiden message"});
       }
+      next();
     };
 
     // User related collection
