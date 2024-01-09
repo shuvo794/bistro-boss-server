@@ -77,21 +77,21 @@ async function run() {
 
     // midille Wire VerifyAdmin
 
-    const VerifyAdmin = async (res, req, next) => {
+    // use verify admin after verifyToken
+    const verifyAdmin = async (req, res, next) => {
       const email = req.decoded.email;
-      const query = { email: email }
+      const query = { email: email };
       const user = await usersCollection.findOne(query);
-      if (user?.role !== 'admin') {
-        return res
-          .status(403)
-          .send({ error: true, message: "forbiden message"});
+      const isAdmin = user?.role === "admin";
+      if (!isAdmin) {
+        return res.status(403).send({ message: "forbidden access" });
       }
       next();
     };
 
     // User related collection
 
-    app.get("/users", verifyToken,VerifyAdmin, async (req, res) => {
+    app.get("/users", verifyToken, verifyAdmin, async (req, res) => {
       const result = await usersCollection.find().toArray();
       res.send(result);
     });
