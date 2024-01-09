@@ -79,6 +79,7 @@ async function run() {
 
     const VerifyAdmin = async (res, req, next) => {
       const email = req.decoded.email;
+      const query ={email:email}
     };
 
     // User related collection
