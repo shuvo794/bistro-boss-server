@@ -143,14 +143,15 @@ async function run() {
     // cart collection api
 
     // Todo Error Get this line
-    
+
     app.get("/carts", verifyToken, async (req, res) => {
       const email = req.query.email;
       if (!email) {
         res.send([]);
       }
-      
+
       const decodedEmail = req.decoded.email;
+
       if (email !== decodedEmail) {
         return res
           .status(403)
@@ -160,7 +161,6 @@ async function run() {
       const result = await cartCollection.find(query).toArray();
       res.send(result);
     });
-
 
     app.post("/carts", async (req, res) => {
       const item = req.body;
