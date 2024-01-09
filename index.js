@@ -78,7 +78,7 @@ async function run() {
     // midille Wire VerifyAdmin
 
     const VerifyAdmin = async (res, req, next) => {
-      
+      const email = req.decoded.email;
     };
 
     // User related collection
