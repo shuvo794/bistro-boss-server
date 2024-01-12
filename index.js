@@ -82,8 +82,8 @@ async function run() {
       const email = req.decoded.email;
       const query = { email: email };
       const user = await usersCollection.findOne(query);
-      const isAdmin = user?.role === "admin";
-      if (!isAdmin) {
+      
+      if (user?.role !== "admin") {
         return res.status(403).send({ message: "forbidden access" });
       }
       next();
@@ -208,3 +208,4 @@ app.get("/", (req, res) => {
 app.listen(port, () => {
   console.log(`bistro boos is setting ${port}`);
 });
+
