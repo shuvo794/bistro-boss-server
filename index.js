@@ -42,7 +42,7 @@ async function run() {
 
     // middlewares
     const verifyToken = (req, res, next) => {
-      console.log("inside verify token", req.headers.authorization);
+      // console.log("inside verify token", req.headers.authorization);
       if (!req.headers.authorization) {
         return res.status(401).send({ message: "unauthorized access" });
       }
@@ -135,7 +135,7 @@ async function run() {
 
     app.get("/review", async (req, res) => {
       const result = await reviweCollection.find().toArray();
-      console.log(result)
+     
       res.send(result);
     });
 
