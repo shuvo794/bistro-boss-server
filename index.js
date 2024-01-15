@@ -133,8 +133,10 @@ async function run() {
       res.send(result);
     });
 
+    app.post("/menu", async (req, res) => {
+  
+});
 
-    
     // review related apis
     app.get("/review", async (req, res) => {
       const result = await reviweCollection.find().toArray();
