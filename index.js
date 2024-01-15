@@ -28,7 +28,7 @@ async function run() {
 
     const userCollection = client.db("bistro_Db").collection("users");
     const menuCollection = client.db("bistro_Db").collection("menu");
-   const reviweCollection = client.db("bistro_Db").collection("reviwe");
+    const reviweCollection = client.db("bistro_Db").collection("reviwe");
     const cartCollection = client.db("bistro_Db").collection("carts");
 
     // jwt related api
@@ -133,9 +133,12 @@ async function run() {
       res.send(result);
     });
 
+
+    
+    // review related apis
     app.get("/review", async (req, res) => {
       const result = await reviweCollection.find().toArray();
-     
+
       res.send(result);
     });
 
