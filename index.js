@@ -134,7 +134,10 @@ async function run() {
     });
 
     app.post("/menu", async (req, res) => {
-  
+      const newItem = req.body;
+      const result = await menuCollection.insertOne(newItem);
+      res.send(result);
+
 });
 
     // review related apis
