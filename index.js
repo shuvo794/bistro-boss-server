@@ -176,6 +176,13 @@ app.delete("/menu/:id",verifyToken,verifyAdmin, async (req, res) => {
       res.send(result);
     });
 
+    // Create payment method
+
+    app.post("/create-payment-intent", async (req, res) => {
+        const { price } = req.body;
+
+    });
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
