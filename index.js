@@ -186,6 +186,9 @@ app.delete("/menu/:id",verifyToken,verifyAdmin, async (req, res) => {
         currency: "usd",
         payment_method_types:['card']
       });
+      res.send({
+        clientSecret: paymentIntent.client_secret,
+      });
     });
 
     // Send a ping to confirm a successful connection
