@@ -3,6 +3,7 @@ const app = express();
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
+const stripe = require("stripe")(process.env.PAYMENT_SECRET_KEY);
 const port = process.env.PORT || 5000;
 
 // middleware
@@ -144,7 +145,7 @@ app.delete("/menu/:id",verifyToken,verifyAdmin, async (req, res) => {
   const query = { _id: new ObjectId(id) };
   const result = await menuCollection.deleteOne(query);
   res.send(result);
-  
+
 });
 
     // review related apis
