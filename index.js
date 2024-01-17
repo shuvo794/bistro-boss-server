@@ -144,6 +144,7 @@ app.delete("/menu/:id",verifyToken,verifyAdmin, async (req, res) => {
   const query = { _id: new ObjectId(id) };
   const result = await menuCollection.deleteOne(query);
   res.send(result);
+  
 });
 
     // review related apis
