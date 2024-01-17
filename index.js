@@ -134,19 +134,18 @@ async function run() {
       res.send(result);
     });
 
-    app.post("/menu",verifyToken,verifyAdmin ,async (req, res) => {
+    app.post("/menu", verifyToken, verifyAdmin, async (req, res) => {
       const newItem = req.body;
       const result = await menuCollection.insertOne(newItem);
       res.send(result);
     });
 
-app.delete("/menu/:id",verifyToken,verifyAdmin, async (req, res) => {
-  const id = req.params.id;
-  const query = { _id: new ObjectId(id) };
-  const result = await menuCollection.deleteOne(query);
-  res.send(result);
-
-});
+    app.delete("/menu/:id", verifyToken, verifyAdmin, async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await menuCollection.deleteOne(query);
+      res.send(result);
+    });
 
     // review related apis
     app.get("/review", async (req, res) => {
@@ -176,7 +175,7 @@ app.delete("/menu/:id",verifyToken,verifyAdmin, async (req, res) => {
       res.send(result);
     });
 
-    // Create payment method
+    // Create payment intent
 
     app.post("/create-payment-intent", async (req, res) => {
       const { price } = req.body;
@@ -184,7 +183,7 @@ app.delete("/menu/:id",verifyToken,verifyAdmin, async (req, res) => {
       const paymentIntent = await stripe.paymentIntents.create({
         amount: amount,
         currency: "usd",
-        payment_method_types:['card']
+        payment_method_types: ["card"],
       });
       res.send({
         clientSecret: paymentIntent.client_secret,
