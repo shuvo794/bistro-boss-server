@@ -179,7 +179,8 @@ app.delete("/menu/:id",verifyToken,verifyAdmin, async (req, res) => {
     // Create payment method
 
     app.post("/create-payment-intent", async (req, res) => {
-        const { price } = req.body;
+      const { price } = req.body;
+      const amount = price * 100;
 
     });
 
