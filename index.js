@@ -194,11 +194,11 @@ async function run() {
 
     app.post("/payments",verifyToken, async (req, res) => {
       const payment = req.body;
-      const result = await paymentCollection.insertOne(payment);
+      const Insertresult = await paymentCollection.insertOne(payment);
 
       const query = { _id: { $in: payment.cartItems.map(id => new ObjectId(id)) } };
-      const resultDelete = await cartCollection.deleteMany(query);
-      res.send({result,resultDelete});
+      const deleteResult = await cartCollection.deleteMany(query);
+      res.send({ Insertresult, deleteResult });
     });
 
     // Send a ping to confirm a successful connection
