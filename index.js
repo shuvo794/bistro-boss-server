@@ -198,7 +198,7 @@ async function run() {
 
       const query = { _id: { $in: payment.cartItems.map(id => new ObjectId(id)) } };
       const resultDelete = await cartCollection.deleteMany(query);
-      res.send(result);
+      res.send({result,resultDelete});
     });
 
     // Send a ping to confirm a successful connection
