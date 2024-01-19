@@ -135,6 +135,18 @@ async function run() {
       res.send(result);
     });
 
+    //!Get --> Read : (specific id)
+    app.get("/menu/:id", async (req, res) => {
+      const id = req.params.id;
+      console.log('first', id);
+      const query = { _id: new ObjectId(id) };
+      console.log("query", query);
+      // const reselt = await menuCollection.findOne(query);
+      const result = await menuCollection.findOne(query);
+      console.log("2snd", result);
+      res.send(result);
+    });
+
     app.post("/menu", verifyToken, verifyAdmin, async (req, res) => {
       const newItem = req.body;
       const result = await menuCollection.insertOne(newItem);
@@ -192,14 +204,21 @@ async function run() {
 
     // payments api create
 
-    app.post("/payments",verifyToken, async (req, res) => {
+    app.get('/admin-stats', async (req, res) => {
+  
+})
+
+    app.post("/payments", verifyToken, async (req, res) => {
       const payment = req.body;
       const Insertresult = await paymentCollection.insertOne(payment);
 
-      const query = { _id: { $in: payment.cartItems.map(id => new ObjectId(id)) } };
+      const query = {
+        _id: { $in: payment.cartItems.map((id) => new ObjectId(id)) },
+      };
       const deleteResult = await cartCollection.deleteMany(query);
       res.send({ Insertresult, deleteResult });
     });
+
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
