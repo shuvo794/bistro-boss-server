@@ -205,7 +205,10 @@ async function run() {
     // payments api create
 
     app.get('/admin-stats', async (req, res) => {
-  
+      const users = await userCollection.estimatedDocumentCount();
+      res.send({
+        users,
+      })
 })
 
     app.post("/payments", verifyToken, async (req, res) => {
