@@ -206,8 +206,12 @@ async function run() {
 
     app.get('/admin-stats', async (req, res) => {
       const users = await userCollection.estimatedDocumentCount();
+      const products = await menuCollection.estimatedDocumentCount();
+      const orders = await paymentCollection.estimatedDocumentCount();
       res.send({
         users,
+        products,
+        orders
       })
 })
 
