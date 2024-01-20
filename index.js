@@ -209,11 +209,12 @@ async function run() {
       const products = await menuCollection.estimatedDocumentCount();
       const orders = await paymentCollection.estimatedDocumentCount();
       const payments = await paymentCollection.find().toArray();
-      const revinew = payments.reduce((sum,payment)=>sum,0)
+      const revinew = payments.reduce((sum,payment)=>sum+payment.price,0)
       res.send({
         users,
         products,
-        orders
+        orders,
+        revinew
       })
 })
 
