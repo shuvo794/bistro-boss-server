@@ -209,6 +209,7 @@ async function run() {
       const products = await menuCollection.estimatedDocumentCount();
       const orders = await paymentCollection.estimatedDocumentCount();
       const payments = await paymentCollection.find().toArray();
+      const revinew = payments.reduce((sum,payment)=>sum,0)
       res.send({
         users,
         products,
