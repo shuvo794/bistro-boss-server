@@ -204,7 +204,7 @@ async function run() {
 
     // payments api create
 
-    app.get('/admin-stats', async (req, res) => {
+    app.get('/admin-stats',verifyToken,verifyAdmin, async (req, res) => {
       const users = await userCollection.estimatedDocumentCount();
       const products = await menuCollection.estimatedDocumentCount();
       const orders = await paymentCollection.estimatedDocumentCount();
