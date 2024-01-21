@@ -230,9 +230,34 @@ async function run() {
     });
 
 
-    app.get('/order-stats', async (req, res) => {
-      
-    })
+    // app.get('/order-stats', async (req, res) => {
+    //   const pipeLine = [
+    //     {
+    //       $unwind: "$menuItems",
+    //     },
+    //     {
+    //       $lookup: {
+    //         from: "menu", // Your menu collection name
+    //         localField: "menuItems",
+    //         foreignField: "_id",
+    //         as: "menuItemDetails",
+    //       },
+    //     },
+    //     {
+    //       $unwind: "$menuItemDetails",
+    //     },
+    //     {
+    //       $group: {
+    //         _id: "$menuItemDetails.category",
+    //         itemCount: { $sum: 1 },
+    //         totalAmount: { $sum: "$menuItemDetails.price" },
+    //       },
+    //     },
+    //   ];
+
+    //   const reselt = await paymentCollection.aggregate(pipeLine).toArray();
+    //   res.send(reselt);
+    // })
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
