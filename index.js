@@ -138,7 +138,7 @@ async function run() {
     //!Get --> Read : (specific id)
     app.get("/menu/:id", async (req, res) => {
       const id = req.params.id;
-      console.log('first', id);
+      console.log("first", id);
       const query = { _id: new ObjectId(id) };
       console.log("query", query);
       // const reselt = await menuCollection.findOne(query);
@@ -204,19 +204,19 @@ async function run() {
 
     // payments api create
 
-    app.get('/admin-stats',verifyToken,verifyAdmin, async (req, res) => {
+    app.get("/admin-stats", verifyToken, verifyAdmin, async (req, res) => {
       const users = await userCollection.estimatedDocumentCount();
       const products = await menuCollection.estimatedDocumentCount();
       const orders = await paymentCollection.estimatedDocumentCount();
       const payments = await paymentCollection.find().toArray();
-      const revinew = payments.reduce((sum,payment)=>sum+payment.price,0)
+      const revinew = payments.reduce((sum, payment) => sum + payment.price, 0);
       res.send({
         users,
         products,
         orders,
-        revinew
-      })
-})
+        revinew,
+      });
+    });
 
     app.post("/payments", verifyToken, async (req, res) => {
       const payment = req.body;
@@ -229,35 +229,75 @@ async function run() {
       res.send({ Insertresult, deleteResult });
     });
 
+    // using aggregate pipeline
+//     app.get("/order-stats",  async (req, res) => {
+     
+//  const pipeline = [
+//    {
+//      $unwind: "$menuItems",
+//    },
+//    {
+//      $lookup: {
+//        from: "menu", // Your menu collection name
+//        localField: "menuItems",
+//        foreignField: "_id",
+//        as: "menuItemDetails",
+//      },
+//    },
+//    {
+//      $unwind: "$menuItemDetails",
+//    },
+//    {
+//      $group: {
+//        _id: "$menuItemDetails.category",
+//        itemCount: { $sum: 1 },
+//        totalAmount: { $sum: "$menuItemDetails.price" },
+//      },
+//    },
+//       ];
+      
+//       const result = await paymentCollection.aggregate(pipeline).toArray();
+      
+    //     });
+    
+    app.get("/order-stats",  async (req, res) => {
+      const result = await paymentCollection
+        .aggregate([
+          {
+            $unwind: "$menuItemIds",
+          },
+          {
+            $lookup: {
+              from: "menu",
+              localField: "menuItemIds",
+              foreignField: "_id",
+              as: "menuItems",
+            },
+          },
+          {
+            $unwind: "$menuItems",
+          },
+          {
+            $group: {
+              _id: "$menuItems.category",
+              quantity: { $sum: 1 },
+              revenue: { $sum: "$menuItems.price" },
+            },
+          },
+          {
+            $project: {
+              _id: 0,
+              category: "$_id",
+              quantity: "$quantity",
+              revenue: "$revenue",
+            },
+          },
+        ])
+        .toArray();
 
-    // app.get('/order-stats', async (req, res) => {
-    //   const pipeLine = [
-    //     {
-    //       $unwind: "$menuItems",
-    //     },
-    //     {
-    //       $lookup: {
-    //         from: "menu", // Your menu collection name
-    //         localField: "menuItems",
-    //         foreignField: "_id",
-    //         as: "menuItemDetails",
-    //       },
-    //     },
-    //     {
-    //       $unwind: "$menuItemDetails",
-    //     },
-    //     {
-    //       $group: {
-    //         _id: "$menuItemDetails.category",
-    //         itemCount: { $sum: 1 },
-    //         totalAmount: { $sum: "$menuItemDetails.price" },
-    //       },
-    //     },
-    //   ];
+      res.send(result);
+    });
 
-    //   const reselt = await paymentCollection.aggregate(pipeLine).toArray();
-    //   res.send(reselt);
-    // })
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
