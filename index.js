@@ -229,38 +229,9 @@ async function run() {
       res.send({ Insertresult, deleteResult });
     });
 
-    // using aggregate pipeline
-//     app.get("/order-stats",  async (req, res) => {
-     
-//  const pipeline = [
-//    {
-//      $unwind: "$menuItems",
-//    },
-//    {
-//      $lookup: {
-//        from: "menu", // Your menu collection name
-//        localField: "menuItems",
-//        foreignField: "_id",
-//        as: "menuItemDetails",
-//      },
-//    },
-//    {
-//      $unwind: "$menuItemDetails",
-//    },
-//    {
-//      $group: {
-//        _id: "$menuItemDetails.category",
-//        itemCount: { $sum: 1 },
-//        totalAmount: { $sum: "$menuItemDetails.price" },
-//      },
-//    },
-//       ];
-      
-//       const result = await paymentCollection.aggregate(pipeline).toArray();
-      
-    //     });
+  
     
-    app.get("/order-stats",verifyToken,verifyAdmin,  async (req, res) => {
+    app.get("/order-stats",  async (req, res) => {
       const result = await paymentCollection
         .aggregate([
           {
