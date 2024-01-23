@@ -260,7 +260,7 @@ async function run() {
       
     //     });
     
-    app.get("/order-stats",  async (req, res) => {
+    app.get("/order-stats",verifyToken,verifyAdmin,  async (req, res) => {
       const result = await paymentCollection
         .aggregate([
           {
