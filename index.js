@@ -218,6 +218,15 @@ async function run() {
       });
     });
 
+app.get("/payments/:email", verifyToken, async (req, res) => {
+  const query = { email: req.params.email };
+  if (req.params.email !== req.decoded.email) {
+    return res.status(403).send({ message: "forbidden access" });
+  }
+  const result = await paymentCollection.find(query).toArray();
+  res.send(result);
+});
+
     app.post("/payments", verifyToken, async (req, res) => {
       const payment = req.body;
       const Insertresult = await paymentCollection.insertOne(payment);
@@ -229,7 +238,36 @@ async function run() {
       res.send({ Insertresult, deleteResult });
     });
 
-  
+   
+//     app.get("/order-stats",  async (req, res) => {
+     
+//  const pipeline = [
+//    {
+//      $unwind: "$menuItems",
+//    },
+//    {
+//      $lookup: {
+//        from: "menu", // Your menu collection name
+//        localField: "menuItems",
+//        foreignField: "_id",
+//        as: "menuItemDetails",
+//      },
+//    },
+//    {
+//      $unwind: "$menuItemDetails",
+//    },
+//    {
+//      $group: {
+//        _id: "$menuItemDetails.category",
+//        itemCount: { $sum: 1 },
+//        totalAmount: { $sum: "$menuItemDetails.price" },
+//      },
+//    },
+//       ];
+      
+//       const result = await paymentCollection.aggregate(pipeline).toArray();
+      
+    //     });
     
     app.get("/order-stats",  async (req, res) => {
       const result = await paymentCollection
