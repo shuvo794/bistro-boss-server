@@ -136,22 +136,36 @@ async function run() {
     });
 
     //!Get --> Read : (specific id)
-    app.get("/menu/:id", async (req, res) => {
-      const id = req.params.id;
-      console.log("first", id);
-      const query = { _id: new ObjectId(id) };
-      console.log("query", query);
-      // const reselt = await menuCollection.findOne(query);
-      const result = await menuCollection.findOne(query);
-      console.log("2snd", result);
-      res.send(result);
-    });
+   app.get("/menu/:id", async (req, res) => {
+     const id = req.params.id;
+     const query = { _id: new ObjectId(id) };
+     const result = await menuCollection.findOne(query);
+     res.send(result);
+   });
 
     app.post("/menu", verifyToken, verifyAdmin, async (req, res) => {
       const newItem = req.body;
       const result = await menuCollection.insertOne(newItem);
       res.send(result);
     });
+
+     app.patch("/menu/:id", async (req, res) => {
+       const item = req.body;
+       const id = req.params.id;
+       const filter = { _id: new ObjectId(id) };
+       const updatedDoc = {
+         $set: {
+           name: item.name,
+           category: item.category,
+           price: item.price,
+           recipe: item.recipe,
+           image: item.image,
+         },
+       };
+
+       const result = await menuCollection.updateOne(filter, updatedDoc);
+       res.send(result);
+     });
 
     app.delete("/menu/:id", verifyToken, verifyAdmin, async (req, res) => {
       const id = req.params.id;
@@ -239,36 +253,6 @@ app.get("/payments/:email", verifyToken, async (req, res) => {
     });
 
    
-//     app.get("/order-stats",  async (req, res) => {
-     
-//  const pipeline = [
-//    {
-//      $unwind: "$menuItems",
-//    },
-//    {
-//      $lookup: {
-//        from: "menu", // Your menu collection name
-//        localField: "menuItems",
-//        foreignField: "_id",
-//        as: "menuItemDetails",
-//      },
-//    },
-//    {
-//      $unwind: "$menuItemDetails",
-//    },
-//    {
-//      $group: {
-//        _id: "$menuItemDetails.category",
-//        itemCount: { $sum: 1 },
-//        totalAmount: { $sum: "$menuItemDetails.price" },
-//      },
-//    },
-//       ];
-      
-//       const result = await paymentCollection.aggregate(pipeline).toArray();
-      
-    //     });
-    
     app.get("/order-stats",  async (req, res) => {
       const result = await paymentCollection
         .aggregate([
