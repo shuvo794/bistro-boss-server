@@ -30,7 +30,13 @@ const sendEmailConfermationEmail = payment => {
       to: payment.email, // recipient email
       subject: "Your Order Confirm .food is come your home", // Subject line
       text: "Hello world!", // plain text body
-      html: "<b>Hello world!</b>", // html body
+      html: `
+      <div>
+      <h2>Hello, Your payment is confrim</h2>
+      
+      </div>
+      
+      `, // html body
     },
     function (error, info) {
       if (error) {
@@ -281,6 +287,9 @@ app.get("/payments/:email", verifyToken, async (req, res) => {
         _id: { $in: payment.cartItems.map((id) => new ObjectId(id)) },
       };
       const deleteResult = await cartCollection.deleteMany(query);
+      // send email
+      sendEmailConfermationEmail(payment);
+
       res.send({ Insertresult, deleteResult });
     });
 
