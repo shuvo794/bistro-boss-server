@@ -24,7 +24,22 @@ let transporter = nodemailer.createTransport({
 // send email confermation email
 
 const sendEmailConfermationEmail = payment => {
-  
+  transporter.sendMail(
+    {
+      from: "SENDER_EMAIL", // verified sender email
+      to: "RECIPIENT_EMAIL", // recipient email
+      subject: "Test message subject", // Subject line
+      text: "Hello world!", // plain text body
+      html: "<b>Hello world!</b>", // html body
+    },
+    function (error, info) {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log("Email sent: " + info.response);
+      }
+    }
+  );
 }
 
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
