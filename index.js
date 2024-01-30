@@ -13,14 +13,14 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-let transporter = nodemailer.createTransport({
-  host: "smtp.sendgrid.net",
-  port: 587,
+const auth = {
   auth: {
-    user: "apikey",
-    pass: process.env.SENDGRID_API_KEY,
+    api_key: process.env.EMAIL_PUBLIC_KEY,
+    domain: process.env.EMAIL_DOMAIN,
   },
-});
+};
+
+const nodemailerMailgun = nodemailer.createTransport(mg(auth));
 
 
 // send email confermation email
@@ -28,13 +28,16 @@ let transporter = nodemailer.createTransport({
 const sendEmailConfermationEmail = payment => {
   transporter.sendMail(
     {
-      from: "yami@gamil.com", // verified sender email
-      to: payment.email, // recipient email
+      from: "shuvohosaain794@gmail.com", // verified sender email
+      to: "shuvohosaain794@gmail.com", // recipient email
       subject: "Your Order Confirm .food is come your home", // Subject line
       text: "Hello world!", // plain text body
       html: `
       <div>
       <h2>Hello, Your payment is confrim</h2>
+      <p>Your tarnajuctionId is ${payment.tranjuctionId}</p>
+      <p>Your price is ${payment.price}</p>
+      <p>${payment.date}</p>
       
       </div>
       
