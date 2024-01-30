@@ -2,9 +2,6 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
-const nodemailer = require("nodemailer");
-const mg = require("nodemailer-mailgun-transport");
-
 require("dotenv").config();
 const stripe = require("stripe")(process.env.PAYMENT_SECRET_KEY);
 const port = process.env.PORT || 5000;
@@ -12,46 +9,6 @@ const port = process.env.PORT || 5000;
 // middleware
 app.use(cors());
 app.use(express.json());
-
-const auth = {
-  auth: {
-    api_key: process.env.EMAIL_PUBLIC_KEY,
-    domain: process.env.EMAIL_DOMAIN,
-  },
-};
-
-const nodemailerMailgun = nodemailer.createTransport(mg(auth));
-
-
-// send email confermation email
-
-const sendEmailConfermationEmail = payment => {
-  transporter.sendMail(
-    {
-      from: "shuvohosaain794@gmail.com", // verified sender email
-      to: "shuvohosaain794@gmail.com", // recipient email
-      subject: "Your Order Confirm .food is come your home", // Subject line
-      text: "Hello world!", // plain text body
-      html: `
-      <div>
-      <h2>Hello, Your payment is confrim</h2>
-      <p>Your tarnajuctionId is ${payment.tranjuctionId}</p>
-      <p>Your price is ${payment.price}</p>
-      <p>${payment.date}</p>
-      
-      </div>
-      
-      `, // html body
-    },
-    function (error, info) {
-      if (error) {
-        console.log(error);
-      } else {
-        console.log("Email sent: " + info.response);
-      }
-    }
-  );
-}
 
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.8g1rh.mongodb.net/?retryWrites=true&w=majority`;
@@ -292,9 +249,6 @@ app.get("/payments/:email", verifyToken, async (req, res) => {
         _id: { $in: payment.cartItems.map((id) => new ObjectId(id)) },
       };
       const deleteResult = await cartCollection.deleteMany(query);
-      // send email
-      sendEmailConfermationEmail(payment);
-
       res.send({ Insertresult, deleteResult });
     });
 
