@@ -26,9 +26,9 @@ let transporter = nodemailer.createTransport({
 const sendEmailConfermationEmail = payment => {
   transporter.sendMail(
     {
-      from: "SENDER_EMAIL", // verified sender email
-      to: "RECIPIENT_EMAIL", // recipient email
-      subject: "Test message subject", // Subject line
+      from: "yami@gamil.com", // verified sender email
+      to: payment.email, // recipient email
+      subject: "Your Order Confirm .food is come your home", // Subject line
       text: "Hello world!", // plain text body
       html: "<b>Hello world!</b>", // html body
     },
