@@ -11,6 +11,16 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
+let transporter = nodemailer.createTransport({
+  host: "smtp.sendgrid.net",
+  port: 587,
+  auth: {
+    user: "apikey",
+    pass: process.env.SENDGRID_API_KEY,
+  },
+});
+
+
 // send email confermation email
 
 const sendEmailConfermationEmail = payment => {
