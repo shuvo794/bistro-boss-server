@@ -108,7 +108,7 @@ async function run() {
 
     app.patch(
       "/users/admin/:id",
-     
+
       async (req, res) => {
         const id = req.params.id;
         const filter = { _id: new ObjectId(id) };
@@ -136,12 +136,12 @@ async function run() {
     });
 
     //!Get --> Read : (specific id)
-   app.get("/menu/:id", async (req, res) => {
-     const id = req.params.id;
-     const query = { _id: new ObjectId(id) };
-     const result = await menuCollection.findOne(query);
-     res.send(result);
-   });
+    app.get("/menu/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await menuCollection.findOne(query);
+      res.send(result);
+    });
 
     app.post("/menu", verifyToken, verifyAdmin, async (req, res) => {
       const newItem = req.body;
@@ -149,23 +149,23 @@ async function run() {
       res.send(result);
     });
 
-     app.patch("/menu/:id", async (req, res) => {
-       const item = req.body;
-       const id = req.params.id;
-       const filter = { _id: new ObjectId(id) };
-       const updatedDoc = {
-         $set: {
-           name: item.name,
-           category: item.category,
-           price: item.price,
-           recipe: item.recipe,
-           image: item.image,
-         },
-       };
+    app.patch("/menu/:id", async (req, res) => {
+      const item = req.body;
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const updatedDoc = {
+        $set: {
+          name: item.name,
+          category: item.category,
+          price: item.price,
+          recipe: item.recipe,
+          image: item.image,
+        },
+      };
 
-       const result = await menuCollection.updateOne(filter, updatedDoc);
-       res.send(result);
-     });
+      const result = await menuCollection.updateOne(filter, updatedDoc);
+      res.send(result);
+    });
 
     app.delete("/menu/:id", verifyToken, verifyAdmin, async (req, res) => {
       const id = req.params.id;
@@ -232,14 +232,14 @@ async function run() {
       });
     });
 
-app.get("/payments/:email", verifyToken, async (req, res) => {
-  const query = { email: req.params.email };
-  if (req.params.email !== req.decoded.email) {
-    return res.status(403).send({ message: "forbidden access" });
-  }
-  const result = await paymentCollection.find(query).toArray();
-  res.send(result);
-});
+    app.get("/payments/:email", verifyToken, async (req, res) => {
+      const query = { email: req.params.email };
+      if (req.params.email !== req.decoded.email) {
+        return res.status(403).send({ message: "forbidden access" });
+      }
+      const result = await paymentCollection.find(query).toArray();
+      res.send(result);
+    });
 
     app.post("/payments", verifyToken, async (req, res) => {
       const payment = req.body;
@@ -252,8 +252,27 @@ app.get("/payments/:email", verifyToken, async (req, res) => {
       res.send({ Insertresult, deleteResult });
     });
 
-   
-    app.get("/order-stats",  async (req, res) => {
+    // app.get("/order-stats", async (req, res) => {
+    //   const result = await paymentCollection
+    //     .aggregate([
+    //       {
+    //         $unwind: "$menuItemIds",
+    //       },
+    //       {
+    //         $lookup: {
+    //           from: "menu",
+    //           localField: "menuItemIds",
+    //           foreignField: "_id",
+    //           as: "menuItems",
+    //         },
+    //       },
+    //     ])
+    //     .toArray();
+
+    //   res.send(result);
+    // });
+
+    app.get("/order-stats", async (req, res) => {
       const result = await paymentCollection
         .aggregate([
           {
@@ -272,7 +291,10 @@ app.get("/payments/:email", verifyToken, async (req, res) => {
           },
           {
             $group: {
-              _id: "$menuItems.category",
+              _id: {
+                category: "$menuItems.category",
+                menuItemId: "$menuItemIds",
+              },
               quantity: { $sum: 1 },
               revenue: { $sum: "$menuItems.price" },
             },
@@ -280,7 +302,8 @@ app.get("/payments/:email", verifyToken, async (req, res) => {
           {
             $project: {
               _id: 0,
-              category: "$_id",
+              category: "$_id.category",
+              menuItemId: "$_id.menuItemId",
               quantity: "$quantity",
               revenue: "$revenue",
             },
@@ -290,7 +313,6 @@ app.get("/payments/:email", verifyToken, async (req, res) => {
 
       res.send(result);
     });
-
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
